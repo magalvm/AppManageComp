@@ -1,0 +1,51 @@
+﻿<!-- Представление для редактирования -->
+<div class="panel-body">
+    <label class="center-block text-center h1"> Edit Company : {{currentItem.name}}</label>
+    <div class="form-group" ng-hide="removeElem">
+        <label>Name Company:</label>
+        <select ng-options="item as item.name for item in items" ng-model="selected"></select>
+        <input class="form-control" ng-model="currentItem.name" />
+
+
+        <label>Estimated:</label>
+        <label>Name Company:</label>
+        <input class="form-control" ng-model="currentItem.price" />
+    </div>
+
+    <div>
+        <div class="input-group">
+            <span class="input-group-sm">
+                <input type="checkbox" class="checkbox" aria-label="Chenge Nesting" ng-model="removeElem">
+            </span>
+
+        </div><!-- /input-group -->
+    </div><!-- /.col-lg-6 -->
+    <div class="row" ng-if="removeElem">
+        <div class="col-lg-6">
+            <div class="input-group">
+                <input type="text" class="form-control col-lg-6" aria-label="..." ng-model="currentItem.name" readonly>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+        <div class="col-lg-6">
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <select class="btn btn-toolbar" name="repeatSelect" id="repeatSelect" ng-model="selected">
+                        <option ng-repeat="item in items" value="{{item.name}}">{{item.name}}</option>
+                    </select>
+                </div>
+                <input type="text" class="form-control" aria-label="Select new company" readonly>
+               <!-- /btn-group -->
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+    </div ><!-- /.row -->
+    <span class="dropup" style="margin: 10px 10px 10px 10px;"></span>
+
+    <div class="well row input-group-btn" style="margin-bottom:10px; ">
+    <div class="col-md-3">
+        <button class="btn btn-primary" ng-click="saveEdit(currentItem)">Save</button> <!--Сохранение изменений-->
+    </div>
+    <div class="col-md-3">
+    <button class="btn btn-primary" ng-click="cancelEdit()">Cancel</button> <!--Отмена правок-->
+   </div>
+        </div>
+    </div>
