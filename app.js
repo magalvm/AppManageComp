@@ -58,8 +58,14 @@ angular.module("exampleApp", [])
                 out.push(arr[i]);
             }
         }
+
+
         //  console.log(out);
         return out;
+        function getSumm(i) {
+            var total=0;
+            return i;
+        }
     }
     $scope.refresh1();
 })
@@ -79,14 +85,29 @@ angular.module("exampleApp", [])
            // $scope.refresh1();
         });
     }
+
   //  $scope.nested_array_stingified = JSON.stringify($scope.roleList);
     // создание нового элемента
     $scope.create_new = function (item) {
         // HTTP POST
         // Отправка POST запроса для создания новой записи на сервере
         console.log(item);
-        item.parentId = "0";
+        if (!item.id) {
+            item.parentId = "0";
+        }
+        
+        $http.post(baseUrl, item).success(function (item) {
+            $scope.items.push(item);
+            $scope.currentView = "table";
+        });
+    }
+
+    $scope.create_sub = function (item) {
+        // HTTP POST
+        // Отправка POST запроса для создания новой записи на сервере
         console.log(item);
+        
+
         $http.post(baseUrl, item).success(function (item) {
             $scope.items.push(item);
             $scope.currentView = "table";
@@ -138,13 +159,29 @@ angular.module("exampleApp", [])
         $scope.currentView = "edit";
     }
 
+    $scope.getid = function guid() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+              .toString(16)
+              .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+          s4() + '-' + s4() + s4() + s4();
+    }
     // сохранение изменений
     $scope.saveEdit = function (item) {
         // Если у элемента есть свойство id выполняем редактирование
         // В данной реализации новые элементы не получают свойство id поэтому редактировать их невозможно (будет исправленно в слудующих примерах)
+        var a=$scope.items;
         if (angular.isDefined(item.id)) {
             console.log("" + item);
-            $scope.update(item);
+            for(i in a)
+                if (item.id === a[i].id) {
+                    item.parentId = item.id;
+                    item.id = $scope.guid();
+                    console.log(item);
+                    $scope.create_sub(item);
+                }else $scope.update(item);
         } else {
             $scope.create_new(item);
         }
@@ -160,18 +197,24 @@ angular.module("exampleApp", [])
     $scope.refresh();
     $scope.repeatSelect = true;
 
-
+    $scope.getsumm = function (item) {
+        if ($scope.mainSumm(item) === item.price) {
+            return "";
+        } else return "$"+$scope.mainSumm(item);
+    }
+    
     $scope.mainSumm = function (item) {
-        console.log(item);
-      var total = item.price;
-      for (i = 0; i < $scope.items.length; i++) {
-          if (item.id === $scope.items[i].parentId) {
-              total += $scope.items[i].price;
-              console.log(total);
-          }
-      }
-      return total === item.price ? "" : total;
-  }
+       var total=item.price;
+       var a=$scope.items;
+         
+           for (var i in a) {
+               if (item.id === a[i].parentId) {
+                   total += $scope.mainSumm(a[i]);
+               }
+           }
+          
+           return total;
+    }
    
    // $scope.roleList = getNestedChildren($scope.items, "0");
 });
