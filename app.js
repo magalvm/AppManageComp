@@ -20,27 +20,26 @@ angular.module("exampleApp", [])
         scope: {
             member: '='
         },
-        template: "<li>{{member.name}} <span>  {{member.price|currency}}<span><b>{{member.summ|currency}}</b></li>",
+        template: "<li>{{member.name}} <span> {{member.price|currency}}<span></li>",
         link: function (scope, element, attrs) {
-
             if (angular.isArray(scope.member.children)) {
                 element.append("<collection collection='member.children'></collection>");
                 $compile(element.contents())(scope);
             }
-            
+             
+
         }
     };
 })
 .constant("baseUrl", "http://localhost:2403/items/")
 .controller("treviewCtrl",function($scope, $http,baseUrl){
-    $scope.currentView = "table";
-    $scope.refresh = function () {
+    $scope.refresh1 = function () {
         // HTTP GET
         // получение всех данных через GET запрос по адрес хранящемуся в baseUrl
         $http.get(baseUrl).success(function (data) {
             $scope.items = data;
             $scope.roleList = getNestedChildren($scope.items, "0");
-           
+            
         });
         $scope.currentView = "table";
     }
@@ -52,33 +51,23 @@ angular.module("exampleApp", [])
           
             if (arr[i].parentId === parent) {
                 var children = getNestedChildren(arr, arr[i].id)
+
                 if (children.length) {
                     arr[i].children = children;
-                }
-                if ($scope.itemSumm(arr[i]) !== arr[i].price) {
-                    arr[i].summ = $scope.itemSumm(arr[i]);
                 }
                 out.push(arr[i]);
             }
         }
 
 
-        console.log(out);
+        //  console.log(out);
         return out;
-       
-    }
-    $scope.itemSumm = function (item) {
-        var total = item.price;
-        
-        if (item.children) {
-            for (var i = 0; i < item.children.length; i++) {
-                total += $scope.itemSumm(item.children[i]);
-               
-            }
+        function getSumm(i) {
+            var total=0;
+            return i;
         }
-        return total;
     }
-    $scope.refresh();
+    $scope.refresh1();
 })
 .controller("defaultCtrl", function ($scope, $http, baseUrl) {
 
@@ -92,7 +81,8 @@ angular.module("exampleApp", [])
       
         $http.get(baseUrl).success(function (data) {
             $scope.items = data;
-            
+           
+           // $scope.refresh1();
         });
     }
 
@@ -102,12 +92,26 @@ angular.module("exampleApp", [])
         // HTTP POST
         // Отправка POST запроса для создания новой записи на сервере
         console.log(item);
-               
+        if (!item.id) {
+            item.parentId = "0";
+        }
+        
         $http.post(baseUrl, item).success(function (item) {
             $scope.items.push(item);
             $scope.currentView = "table";
         });
-        $rootScope.refresh();
+    }
+
+    $scope.create_sub = function (item) {
+        // HTTP POST
+        // Отправка POST запроса для создания новой записи на сервере
+        console.log(item);
+        
+
+        $http.post(baseUrl, item).success(function (item) {
+            $scope.items.push(item);
+            $scope.currentView = "table";
+        });
     }
 
     // обновление элемента
@@ -125,15 +129,14 @@ angular.module("exampleApp", [])
                     break;
                 }
             }
-            
             $scope.currentView = "table";
         });
     }
-    $scope.selected =$scope.items /*function () {
+    $scope.selected = function () {
         var arr = [];
         arr = $scope.items;
         return arr[0];
-    }*/
+    }
     // удаление элемента из модели
     $scope.delete = function (item) {
         // HTTP DELETE
@@ -144,7 +147,6 @@ angular.module("exampleApp", [])
         }).success(function () {
             $scope.items.splice($scope.items.indexOf(item), 1);
         });
-        $scope.currentView = "table";
     }
 
     // редеактирование существующего или создание нового элемента
@@ -170,16 +172,18 @@ angular.module("exampleApp", [])
     $scope.saveEdit = function (item) {
         // Если у элемента есть свойство id выполняем редактирование
         // В данной реализации новые элементы не получают свойство id поэтому редактировать их невозможно (будет исправленно в слудующих примерах)
-       
+        var a=$scope.items;
         if (angular.isDefined(item.id)) {
-            $scope.update(item);
+            console.log("" + item);
+            for(i in a)
+                if (item.id === a[i].id) {
+                    item.parentId = item.id;
+                    item.id = $scope.guid();
+                    console.log(item);
+                    $scope.create_sub(item);
+                }else $scope.update(item);
         } else {
-            if (angular.isDefined(item.parentId)) {
-                $scope.create_new(item);
-            } else {
-                item.parentId = "0";
-                $scope.create_new(item);
-            }
+            $scope.create_new(item);
         }
     }
 

@@ -13,13 +13,13 @@
 
 
     <form name="myForm">
-        <label for="repeatSelect"> Select Nesting: </label>
-        <select name="repeatSelect" id="repeatSelect" ng-model="currentItem.parentId">
+        <label for="repeatSelect"> Repeat select: </label>
+        <select name="repeatSelect" id="repeatSelect" ng-model="currentItem.id">
             <option ng-repeat="item in items" value="{{item.id}}">{{item.name}}</option>
         </select>
     </form>
     <hr>
-    
+    <tt>repeatSelect = {{currentItem}}</tt><br />
     
     <button class="btn btn-primary" ng-click="saveEdit(currentItem)">Save</button> <!--Сохранение изменений-->
     <button class="btn btn-primary" ng-click="cancelEdit()">Cancel</button> <!--Отмена правок-->
