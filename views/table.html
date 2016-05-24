@@ -1,29 +1,22 @@
 ﻿<!--Представление для отображения всех данных-->
 
 
-    <div class="row">
-        <div class='col-md-4' ng-controller="treviewCtrl">
-            <collection collection='roleList'></collection>
-         </div>   
-        
-    <div class="col-md-8">
+<div class="row">
+    <div class="tool"> <b>NAME |</b> <b>Company Eatimated Earnings |</b> <b>Company Eatimated Earnings + Child Company Eatimated Earnings</b></div>
+    <hr />
 
-        <div class="row" ng-repeat="item in items track by item.id">
-            <div class="col-md-4">{{getsumm(item)}}</div>
-            <div class="col-md-4"><button class="btn btn-xs btn-primary " ng-click="delete(item)">Delete {{item.name}}</button></div>
-            <div class="col-md-2"><button class="btn btn-xs btn-primary " ng-click="edit(item)">Edit</button></div>
-        </div>
-
+    <div ng-controller="treviewCtrl">
+        <collection collection='roleList'></collection>
     </div>
-        </div>  
-        <div class="panel-body row">
-            
-                <button class="btn btn-primary" ng-click="refresh()" >Refresh</button>
-           
-           
-                <button class="btn btn-primary " ng-click="create()">New Comp</button>
-            
-        </div>
 
+</div>
+<div class="panel-body row">
+
+    <button class="btn btn-primary" ng-click="refresh()">Refresh</button>
+
+    <button class="btn btn-primary " ng-click="edit()">Edit</button>
+    <button class="btn btn-primary " ng-click="create()">New Comp</button>
+
+</div>
 
 

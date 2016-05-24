@@ -1,26 +1,24 @@
 ﻿<div class="panel-body">
     <div class="form-group">
         <label>Name Company:</label>
-       
+
         <input class="form-control" ng-model="currentItem.name" />
     </div>
     <div class="form-group">
         <label>Estimated:</label>
-        
+
         <input class="form-control" ng-model="currentItem.price" />
     </div>
 
-
-
     <form name="myForm">
-        <label for="repeatSelect"> Repeat select: </label>
-        <select name="repeatSelect" id="repeatSelect" ng-model="currentItem.id">
+        <label for="repeatSelect"> Select Nesting: </label>
+        <select name="repeatSelect" id="repeatSelect" ng-model="currentItem.parentId">
             <option ng-repeat="item in items" value="{{item.id}}">{{item.name}}</option>
         </select>
     </form>
     <hr>
-    <tt>repeatSelect = {{currentItem}}</tt><br />
-    
+
+
     <button class="btn btn-primary" ng-click="saveEdit(currentItem)">Save</button> <!--Сохранение изменений-->
     <button class="btn btn-primary" ng-click="cancelEdit()">Cancel</button> <!--Отмена правок-->
 </div>
